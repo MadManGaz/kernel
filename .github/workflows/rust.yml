@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Install QEMU
-      run: sudo apt install qemu-system-x86_64
+      run: sudo apt install qemu qemu-kvm libvirt bridge-utils
     - name: Switch to Nightly
       run: rustup default nightly
     - name: Add llvm-tools component
