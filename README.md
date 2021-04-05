@@ -10,6 +10,8 @@ by Phillip Oppermann.
 
 - qemu-system-x86\_64
 - Rust nightly
+- `rust-src` rustup component
+- `llvm-tools-preview` rustup component
 
 Besides a working computer, that's it really. You can run this on apple silicon
 macs, however you will have to use qemu in emulation mode as this will only
@@ -17,9 +19,19 @@ compile x86\_64 code for now. The bootloader only handles Intel code.
 
 ## Building and Running
 
-This is quite simple, as cross compilation is built right into Rust. The
-project is configured to target the LLVM target specified in the
-`x86\_64-kernel.json` toolchain file.
+This is made easy by nature of the Rust toolchain being an all-in-one cross
+compiler, with a rust native linker. The kernel code is pure Rust when
+possible. Assembly is required at points, however no assembler is required.
+This is handled by the Rust toolchain.
+
+### First Time Setup:
+
+```shell
+rustup default nightly
+rustup component add rust-src
+rustup component add llvm-tools-preview
+cargo install bootimage
+```
 
 ### To build:
 
