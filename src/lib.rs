@@ -5,16 +5,20 @@
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod gdt;
+pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
-pub mod interrupts;
-pub mod gdt;
 
 use core::panic::PanicInfo;
+use x86_64::instructions::hlt;
 
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() };
+    // Executes sti machine code instruction to enable interrupts.
+    x86_64::instructions::interrupts::enable();
 }
 
 /// Entry point for `cargo test`
@@ -23,7 +27,22 @@ pub fn init() {
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+    hlt_loop();
+}
+
+pub fn test_panic_handler(info: &PanicInfo) -> ! {
+    serial_println!("[failed]\n");
+    serial_println!("Error: {}\n", info);
+    exit_qemu(QemuExitCode::Failed);
+    hlt_loop();
+}
+
+/// Endless loop that allows for an energy efficent way to wait for interrupts
+/// and end _start() with.
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 pub trait Testable {
@@ -53,13 +72,6 @@ pub fn test_runner(tests: &[&dyn Testable]) {
         test.run();
     }
     exit_qemu(QemuExitCode::Success);
-}
-
-pub fn test_panic_handler(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
-    exit_qemu(QemuExitCode::Failed);
-    loop {}
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]

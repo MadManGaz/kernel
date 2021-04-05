@@ -14,10 +14,11 @@ pub extern "C" fn _start() -> ! {
 
     kernel::init();
 
+    println!("We did not crash!");
     #[cfg(test)]
         test_main();
 
-    loop {}
+    kernel::hlt_loop();
 }
 
 /// Custom panic handler writes to a VGA buffer rather than stdout. This panic
@@ -27,7 +28,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    kernel::hlt_loop();
 }
 
 /// Panic handler for running tests in a QEMU virtual machine. Error messages
