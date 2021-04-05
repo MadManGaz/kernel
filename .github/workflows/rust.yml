@@ -16,7 +16,11 @@ jobs:
 
     steps:
     - name: Install QEMU
-      run: sudo apt install qemu
+      run: |
+              sudo apt update
+              sudo apt install qemu-system-x86
+              sudo apt install qemu-kvm
+              sudo apt install qemu-utils
     - name: Switch to Nightly
       run: rustup default nightly
     - name: Add llvm-tools component
