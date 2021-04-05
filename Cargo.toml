@@ -24,6 +24,13 @@ test-args = [
 test-timeout = 300          # (in seconds)
 test-success-exit-code = 33 # (0x10 << 1) | 1
 
+
+# Integration tests with disabled unit testing framework.
+# This is usually to support should_panic type functionality.
 [[test]]
 name = "should_panic"
+harness = false
+
+[[test]]
+name = "stack_overflow"
 harness = false
