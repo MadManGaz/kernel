@@ -15,9 +15,8 @@ pub extern "C" fn _start() -> ! {
     kernel::init();
 
     #[cfg(test)]
-    test_main();
+        test_main();
 
-    println!("It did not crash!");
     loop {}
 }
 
