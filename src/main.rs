@@ -14,13 +14,6 @@ pub extern "C" fn _start() -> ! {
 
     kernel::init();
 
-    fn stack_overflow() {
-        stack_overflow(); // for each recursion, the return address is pushed
-    }
-
-    // trigger a stack overflow
-    stack_overflow();
-
     #[cfg(test)]
     test_main();
 
