@@ -4,25 +4,24 @@
 #![test_runner(kernel::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 use kernel::println;
 
-/// Entry-point for the kernel.
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
+// This allows or type checking the method signature of the entry point so we
+// don't accidentally pass in arbitrary arguments. `_start` is defined lower
+// in the programs hierarchy.
+entry_point!(kernel_main);
 
+/// Entry-point for the kernel.
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    println!("Hello Friends{}", "!");
     kernel::init();
 
-    use x86_64::registers::control::Cr3;
-
-    let (level_4_page_table, _) = Cr3::read();
-    println!("Level 4 page table at: {:?}", level_4_page_table.start_address());
-
-    println!("We did not crash!");
     #[cfg(test)]
-        test_main();
+    test_main();
 
+    println!("We did not crash! :^)");
     kernel::hlt_loop();
 }
 

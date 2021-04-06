@@ -1,8 +1,8 @@
 use core::fmt;
+use core::fmt::Write;
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::Volatile;
-use core::fmt::Write;
 
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
@@ -124,6 +124,15 @@ impl Writer {
         for col in 0..BUFFER_WIDTH {
             self.buffer.chars[row][col].write(blank);
         }
+    }
+
+    #[cfg(ignore)]
+    fn backspace(&mut self) {
+        self.column_position -= 1;
+        self.buffer.chars[BUFFER_HEIGHT][self.column_position].write(ScreenChar {
+            ascii_character: b' ',
+            color_code: ColorCode::new(Color::Yellow, Color::Black),
+        });
     }
 }
 
