@@ -14,7 +14,7 @@ use kernel::println;
 entry_point!(kernel_main);
 
 /// Entry-point for the kernel.
-fn kernel_main(boot_info: &'static BootInfo) -> ! {
+fn kernel_main(_boot_info: &'static BootInfo) -> ! {
     println!("Hello Friends{}", "!");
     kernel::init();
 

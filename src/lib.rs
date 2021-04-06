@@ -15,7 +15,6 @@ pub mod memory;
 use bootloader::{entry_point, BootInfo};
 
 use core::panic::PanicInfo;
-use x86_64::instructions::hlt;
 
 #[cfg(test)]
 entry_point!(test_kernel_main);
