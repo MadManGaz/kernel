@@ -12,6 +12,7 @@ by Phillip Oppermann.
 - Rust nightly
 - `rust-src` rustup component
 - `llvm-tools-preview` rustup component
+- `bootimage` tool
 
 Besides a working computer, that's it really. You can run this on apple silicon
 macs, however you will have to use qemu in emulation mode as this will only
