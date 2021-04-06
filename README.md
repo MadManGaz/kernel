@@ -3,6 +3,8 @@
 This is a simple x86\_64 kernel written in rust. It's here to allow me to get
 used to writing low level code like this, without stdlib.
 
+![example branch parameter](https://github.com/madmangaz/kernel/actions/workflows/rust.yml/badge.svg?branch=main)
+
 I'm following along the excellent guide at [Writing an OS in Rust](https://os.phil-opp.com/)
 by Phillip Oppermann.
 
