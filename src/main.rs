@@ -6,10 +6,10 @@
 
 extern crate alloc;
 
+use alloc::{boxed::Box, rc::Rc, vec, vec::Vec};
 use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 use kernel::println;
-use alloc::{boxed::Box, vec, vec::Vec, rc::Rc};
 use x86_64::VirtAddr;
 
 // This allows or type checking the method signature of the entry point so we
@@ -26,12 +26,9 @@ fn kernel_main(_boot_info: &'static BootInfo) -> ! {
 
     let phys_mem_offset = VirtAddr::new(_boot_info.physical_memory_offset);
     let mut mapper = unsafe { memory::init(phys_mem_offset) };
-    let mut frame_allocator = unsafe {
-        BootInfoMemoryAllocator::init(&_boot_info.memory_map)
-    };
+    let mut frame_allocator = unsafe { BootInfoMemoryAllocator::init(&_boot_info.memory_map) };
 
-    allocator::init_heap(&mut mapper, &mut frame_allocator)
-        .expect("heap initialization failed");
+    allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
 
     // allocate a number on the heap.
     let heap_value = Box::new(41);
@@ -51,9 +48,15 @@ fn kernel_main(_boot_info: &'static BootInfo) -> ! {
     // create a reference counted vector -> will be freed when count reaches 0
     let reference_counted = Rc::new(vec![1, 2, 3]);
     let cloned_reference = reference_counted.clone();
-    println!("current reference count is {}", Rc::strong_count(&cloned_reference));
+    println!(
+        "current reference count is {}",
+        Rc::strong_count(&cloned_reference)
+    );
     core::mem::drop(reference_counted);
-    println!("reference count is {} now", Rc::strong_count(&cloned_reference));
+    println!(
+        "reference count is {} now",
+        Rc::strong_count(&cloned_reference)
+    );
 
     #[cfg(test)]
     test_main();
